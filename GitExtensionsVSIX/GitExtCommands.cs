@@ -19,11 +19,6 @@ namespace GitExtensionsVSIX
     internal sealed class GitExtCommands
     {
         /// <summary>
-        /// Command menu group (command set GUID).
-        /// </summary>
-        public static readonly Guid CommandSet = new Guid("8bd71b0f-f446-442d-a92a-bbefd8e60202");
-
-        /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package _package;
@@ -54,34 +49,34 @@ namespace GitExtensionsVSIX
             try
             {
                 //RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
-                RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>(), 0x1100);
+                RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>(), PackageIds.gitExtDiffCommand);
                 //RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
-                RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>(), 0x1101);
+                RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>(), PackageIds.gitExtHistoryCommand);
                 //RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
-                RegisterCommand("ResetChanges", new ToolbarCommand<Revert>(), 0x1102);
-                RegisterCommand("Browse", new ToolbarCommand<Browse>(), 0x1103);
-                RegisterCommand("Clone", new ToolbarCommand<Clone>(), 0x1104);
-                RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>(), 0x1105);
-                RegisterCommand("Commit", new ToolbarCommand<Commit>(), 0x1106);
-                RegisterCommand("Pull", new ToolbarCommand<Pull>(), 0x1107);
-                RegisterCommand("Push", new ToolbarCommand<Push>(), 0x1108);
-                RegisterCommand("Stash", new ToolbarCommand<Stash>(), 0x1109);
-                RegisterCommand("Remotes", new ToolbarCommand<Remotes>(), 0x110a);
-                RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>(), 0x110b);
-                RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>(), 0x110c);
-                RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>(), 0x110d);
-                RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>(), 0x110e);
-                RegisterCommand("FindFile", new ToolbarCommand<FindFile>(), 0x110f);
-                RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>(), 0x1110);
-                RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>(), 0x1111);
-                RegisterCommand("Merge", new ToolbarCommand<Merge>(), 0x1112);
-                RegisterCommand("Rebase", new ToolbarCommand<Rebase>(), 0x1113);
-                RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>(), 0x1114);
-                RegisterCommand("CherryPick", new ToolbarCommand<Cherry>(), 0x1115);
-                RegisterCommand("Bash", new ToolbarCommand<Bash>(), 0x1116);
-                RegisterCommand("Settings", new ToolbarCommand<Settings>(), 0x1117);
-                RegisterCommand("About", new ToolbarCommand<About>(), 0x1118);
-            }
+                RegisterCommand("ResetChanges", new ToolbarCommand<Revert>(), PackageIds.gitExtResetFileCommand);
+                RegisterCommand("Browse", new ToolbarCommand<Browse>(), PackageIds.gitExtBrowseCommand);
+                RegisterCommand("Clone", new ToolbarCommand<Clone>(), PackageIds.gitExtCloneCommand);
+                RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>(), PackageIds.gitExtNewCommand);
+                RegisterCommand("Commit", new ToolbarCommand<Commit>(), PackageIds.gitExtCommitCommand);
+                RegisterCommand("Pull", new ToolbarCommand<Pull>(), PackageIds.gitExtPullCommand);
+                RegisterCommand("Push", new ToolbarCommand<Push>(), PackageIds.gitExtPushCommand);
+                RegisterCommand("Stash", new ToolbarCommand<Stash>(), PackageIds.gitExtStashCommand);
+                RegisterCommand("Remotes", new ToolbarCommand<Remotes>(), PackageIds.gitExtRemotesCommand);
+                RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>(), PackageIds.gitExtGitIgnoreCommand);
+                RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>(), PackageIds.gitExtApplyPatchCommand);
+                RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>(), PackageIds.gitExtFormatPatchCommand);
+                RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>(), PackageIds.gitExtViewChangesCommand);
+                RegisterCommand("FindFile", new ToolbarCommand<FindFile>(), PackageIds.gitExtFindFileCommand);
+                RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>(), PackageIds.gitExtCheckoutCommand);
+                RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>(), PackageIds.gitExtCreateBranchCommand);
+                RegisterCommand("Merge", new ToolbarCommand<Merge>(), PackageIds.gitExtMergeCommand);
+                RegisterCommand("Rebase", new ToolbarCommand<Rebase>(), PackageIds.gitExtRebaseCommand);
+                RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>(), PackageIds.gitExtSolveConflictsCommand);
+                RegisterCommand("CherryPick", new ToolbarCommand<Cherry>(), PackageIds.gitExtCherryPickCommand);
+                RegisterCommand("Bash", new ToolbarCommand<Bash>(), PackageIds.gitExtBashCommand);
+                RegisterCommand("Settings", new ToolbarCommand<Settings>(), PackageIds.gitExtSettingsCommand);
+                RegisterCommand("About", new ToolbarCommand<About>(), PackageIds.gitExtAboutCommand);
+    }
             catch (Exception ex)
             {
                 if (OutputPane != null)
@@ -92,7 +87,7 @@ namespace GitExtensionsVSIX
         private void RegisterCommand(string commandName, CommandBase command, int id)
         {
             _commandsByName[commandName] = command;
-            var commandId = new CommandID(CommandSet, id);
+            var commandId = new CommandID(PackageGuids.guidGitExtensionsPackageCmdSet, id);
             var menuCommand = new MenuCommand(MenuItemCallback, commandId);
             _commandService.AddCommand(menuCommand);
             _commands[id] = command;
