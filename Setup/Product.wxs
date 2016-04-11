@@ -38,8 +38,6 @@
                 <Directory Id="VS2005" Name="Visual Studio 2005" />
                 <Directory Id="VS2008" Name="Visual Studio 2008" />
                 <Directory Id="VS2010" Name="Visual Studio 2010" />
-                <Directory Id="VS2012" Name="Visual Studio 2012" />
-                <Directory Id="VS2013" Name="Visual Studio 2013" />
             </Directory>
             <Directory Id="ProgramMenuFolder">
                 <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
@@ -49,10 +47,11 @@
                 <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
             </Component>
         </Directory>
-        <?define VsVersions = 2005;2008;2010;2012;2013?>
-        <?foreach VsVersion in $(var.VsVersions)?>
-        <Property Id="VS$(var.VsVersion)INSTFOLDER">
-            <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+        <?define VsOldVersions = 2005;2008;2010?>
+        <?define VsAllAddinVersions = 2005;2008;2010;2012;2013?>
+        <?foreach VsAddinVersion in $(var.VsAllAddinVersions)?>
+        <Property Id="VS$(var.VsAddinVersion)INSTFOLDER">
+            <DirectorySearch Id="VS$(var.VsAddinVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsAddinVersion)" />
         </Property>
         <?endforeach ?>
         <DirectoryRef Id="INSTALLDIR">
@@ -503,28 +502,34 @@
         <ComponentGroup Id="Component.ConEmuFiles">
           <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" /><ComponentRef Id="File.CER03" /><ComponentRef Id="File.CER04" /><ComponentRef Id="File.CER05" /><ComponentRef Id="File.CER06" /><ComponentRef Id="File.CER07" /><ComponentRef Id="File.CER08" /><ComponentRef Id="File.CER09" /><ComponentRef Id="File.CER10" />
         </ComponentGroup>
-        <?foreach VsVersion in $(var.VsVersions)?>
-        <DirectoryRef Id="VS$(var.VsVersion)">
-            <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
-                <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-                    <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugin\bin\Release\GitPlugin.AddIn" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+        <?foreach VsOldVersion in $(var.VsOldVersions)?>
+        <DirectoryRef Id="VS$(var.VsOldVersion)">
+            <Directory Id="VS$(var.VsOldVersion)_Addins" Name="Addins">
+                <Component Id="VS$(var.VsOldVersion)_GitPlugin.AddIn" Guid="*">
+                    <File Id="VS$(var.VsOldVersion)_GitPlugin.AddIn" Source="..\GitPlugin\bin\Release\GitPlugin.AddIn" />
+                    <RemoveFolder Id="VS$(var.VsOldVersion)_GitPlugin.AddIn" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsOldVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsOldVersion)" />
                 </Component>
-                <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-                    <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugin\bin\Release\GitPlugin.dll" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                <Component Id="VS$(var.VsOldVersion)_GitPlugin.dll" Guid="*">
+                    <File Id="VS$(var.VsOldVersion)_GitPlugin.dll" Source="..\GitPlugin\bin\Release\GitPlugin.dll" />
+                    <RemoveFolder Id="VS$(var.VsOldVersion)_GitPlugin.dll" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsOldVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsOldVersion)" />
                 </Component>
-                <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
-                    <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-                        <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugin\bin\Release\en-US\GitPlugin.resources.dll" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
+                <Directory Id="VS$(var.VsOldVersion)_Addins_enUS" Name="en-US">
+                    <Component Id="VS$(var.VsOldVersion)_GitPlugin.resources.dll" Guid="*">
+                        <File Id="VS$(var.VsOldVersion)_GitPlugin.resources.dll" Source="..\GitPlugin\bin\Release\en-US\GitPlugin.resources.dll" />
+                        <RemoveFolder Id="VS$(var.VsOldVersion)_GitPlugin.resources.dll" On="uninstall" />
                     </Component>
                 </Directory>
             </Directory>
         </DirectoryRef>
         <?endforeach ?>
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="GitExtensionsVSIX.vsix" Guid="*">
+                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensionsVSIX.3166f76a-2b07-410a-a72a-509d6a2d146c" Vital="yes" Permanent="no" />
+                <File Id="GitExtensionsVSIX.vsix" Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
+            </Component>
+        </DirectoryRef>
 
         <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
         <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
@@ -575,12 +580,12 @@
                                      AND !VS2010FeatureId=3</Custom>
 
             <Custom Action="RemoveVS2012AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2012INSTFOLDER
-                                     AND !VS2012FeatureId=3</Custom>
+                 After="RemoveFiles">Installed AND VS2012INSTFOLDER
+                                     AND VSExtensionFeatureId=3</Custom>
 
             <Custom Action="RemoveVS2013AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
-                                     AND !VS2013FeatureId=3</Custom>
+                 After="RemoveFiles">Installed AND VS2013INSTFOLDER
+                                     AND VSExtensionFeatureId=3</Custom>
 
             <Custom Action="UninstallGitExtensions"
                 After="InstallInitialize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
@@ -836,14 +841,17 @@
                 <ComponentRef Id="Path" />
             </Feature>
             <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
-                <?foreach VsVersion in $(var.VsVersions)?>
-                <Feature Id="VS$(var.VsVersion)FeatureId" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-                    <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
-                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
-                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
-                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
+                <?foreach VsOldVersion in $(var.VsOldVersions)?>
+                <Feature Id="VS$(var.VsOldVersion)FeatureId" Title="Visual Studio $(var.VsOldVersion) integration" Level="1">
+                    <Condition Level="2">NOT VS$(var.VsOldVersion)INSTFOLDER</Condition>
+                    <ComponentRef Id="VS$(var.VsOldVersion)_GitPlugin.AddIn" />
+                    <ComponentRef Id="VS$(var.VsOldVersion)_GitPlugin.dll" />
+                    <ComponentRef Id="VS$(var.VsOldVersion)_GitPlugin.resources.dll" />
                 </Feature>
                 <?endforeach ?>
+                <Feature Id="VSExtensionFeatureId" Title="Visual Studio 2012-2015 integration" Level="1">
+                    <ComponentRef Id="GitExtensionsVSIX.vsix" />
+                </Feature>
             </Feature>
             <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
                 <ComponentRef Id="Protocol.git" />
@@ -865,5 +873,6 @@
         </InstallExecuteSequence>
         <?endif ?>
         <UI />
-    </Product>
+
+</Product>
 </Wix>
