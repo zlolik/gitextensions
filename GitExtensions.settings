@@ -21,7 +21,7 @@
       <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
     </key>
     <value>
-      <string>gitextensions/gitextensions</string>
+      <string>gitextensions/gitextensions|zlolik/gitextensions</string>
     </value>
   </item>
   <item>
