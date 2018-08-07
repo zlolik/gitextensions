@@ -1466,6 +1466,7 @@ namespace GitUI
             var columnIndex = e.ColumnIndex;
 
             int graphColIndex = GraphDataGridViewColumn.Index;
+            int sequentialRevisionColIndex = SequentialRevisionDataGridViewColumn.Index;
             int messageColIndex = MessageDataGridViewColumn.Index;
             int authorColIndex = AuthorDataGridViewColumn.Index;
             int dateColIndex = DateDataGridViewColumn.Index;
@@ -1572,7 +1573,13 @@ namespace GitUI
                 else if (spi != null && spi.CurrentBranch == revision.Guid)
                     rowFont = SuperprojectFont;
 
-                if (columnIndex == messageColIndex)
+                if (columnIndex == sequentialRevisionColIndex)
+                {
+                    var text = (string)e.FormattedValue;
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
+                else if (columnIndex == messageColIndex)
                 {
                     int baseOffset = 0;
                     if (IsCardLayout())
@@ -1850,6 +1857,7 @@ namespace GitUI
             e.FormattingApplied = true;
 
             int graphColIndex = GraphDataGridViewColumn.Index;
+            int sequentialRevisionColIndex = SequentialRevisionDataGridViewColumn.Index;
             int messageColIndex = MessageDataGridViewColumn.Index;
             int authorColIndex = AuthorDataGridViewColumn.Index;
             int dateColIndex = DateDataGridViewColumn.Index;
@@ -1858,6 +1866,10 @@ namespace GitUI
             if (columnIndex == graphColIndex && !revision.IsArtificial()) //Do not show artificial guid
             {
                 e.Value = revision.Guid;
+            }
+            else if (columnIndex == sequentialRevisionColIndex)
+            {
+                e.Value = "0.0"; // revision.SequentialRevision;
             }
             else if (columnIndex == messageColIndex)
             {

@@ -37,6 +37,7 @@ namespace GitCommands
         public List<IGitRef> Refs { get { return _refs; } }
 
         public string TreeGuid { get; set; }
+        public string SequentialRevision { get; set; }
 
         public string Author { get; set; }
         public string AuthorEmail { get; set; }

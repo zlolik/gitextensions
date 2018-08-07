@@ -79,6 +79,7 @@ namespace GitUI
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SequentialRevisionDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -175,6 +176,7 @@ namespace GitUI
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.GraphDataGridViewColumn,
+            this.SequentialRevisionDataGridViewColumn,
             this.MessageDataGridViewColumn,
             this.AuthorDataGridViewColumn,
             this.DateDataGridViewColumn,
@@ -228,6 +230,15 @@ namespace GitUI
             this.GraphDataGridViewColumn.ReadOnly = true;
             this.GraphDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.GraphDataGridViewColumn.Width = 70;
+            //
+            // SequentialRevision
+            //
+            this.SequentialRevisionDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SequentialRevisionDataGridViewColumn.HeaderText = "Rev";
+            this.SequentialRevisionDataGridViewColumn.Name = "SequentialRevision";
+            this.SequentialRevisionDataGridViewColumn.ReadOnly = true;
+            this.SequentialRevisionDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.SequentialRevisionDataGridViewColumn.Width = 40;
             // 
             // Message
             // 
@@ -892,6 +903,7 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SequentialRevisionDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem compareToBranchToolStripMenuItem;
